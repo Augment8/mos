@@ -17,5 +17,10 @@ connection.onerror = function (error) {
 // Log messages from the server
 connection.onmessage = function (e) {
   console.log('event message');
-  document.body.insertAdjacentHTML("beforeend",e.data + "<br>");
+  if (typeof  e.data === 'string') {
+    document.body.insertAdjacentHTML("beforeend",e.data + "<br>");
+  } else {
+    var str = "x: " + e.data.x + ", y: " + e.data.y;
+    document.body.insertAdjacentHTML("beforeend",str + "<br>");
+  }
 };

@@ -60,16 +60,15 @@ wsServer.on("request", function(request) {
           console.log('controller');
           con.on("message", function(message) {
             if (message.type === "utf8") {
-                console.log('Received Message: ' + message.utf8Data);
-                for (var i=0; i < viewConnections.length; i++) {
-                   var view = viewConnections[i];
-                   console.log(viewConnections.length);
-                   if (view) {
-                     view.sendUTF(message.utf8Data);
-                   }
+              console.log('Received Message: ' + message.utf8Data);
+              for (var i=0; i < viewConnections.length; i++) {
+                var view = viewConnections[i];
+                if (view) {
+                  view.sendUTF(message.utf8Data);
                 }
               }
-             });
+            }
+          });
           con.on("close", function(reasonCode, description) {
             // console.log((new Date()) + ' Peer ' + viewConnection.remoteAddress + ' disconnected.');
           });

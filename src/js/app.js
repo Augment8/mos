@@ -5,7 +5,14 @@ var connection = new WebSocket(url,['mos-controller']);
 
 connection.onopen = function () {
   console.log('open');
-  connection.send('Ping'); // Send the message 'Ping' to the server
+  document.addEventListener('touchmove', function(e){
+    var touch = e.changedTouches[0];
+    var obj = {
+      x: touch.clientX,
+      y: touch.clientY
+    };
+    connection.send(JSON.stringify(obj));
+  });
 };
 
 // Log errors
