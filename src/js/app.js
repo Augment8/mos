@@ -8,6 +8,7 @@ connection.onopen = function () {
   document.addEventListener('touchmove', function(e){
     var touch = e.changedTouches[0];
     var obj = {
+      type: 'touchmove',
       x: touch.clientX,
       y: touch.clientY
     };
@@ -20,9 +21,17 @@ connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
 };
 
+var session = {};
 var func = {
+  session_id: function(message) {
+    document.cookie = "SESSION_ID=" + message.session_id + ";";
+    session.user = prompt("ユーザー名を入力してください", '');
+    connection.send(JSON.stringify({type: "session", session: session}));
+  },
   session: function(message) {
-    document.cookie = "SESSION_ID=" + message['session'] + ";";
+    var session = message.session;
+    session.user = prompt("ユーザー名を入力してください。", session.user);
+    connection.send(JSON.stringify({type: "session", session: session}));
   }
 };
 

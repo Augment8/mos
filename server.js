@@ -45,9 +45,16 @@ wsServer.on("request", function(request) {
     return;
   }
   var con;
-  var createSession = function(id) {
-    con.sendUTF(JSON.stringify({type: "session", session: id}));
+  var send = function(message) {
+    con.sendUTF(JSON.stringify(message));
   };
+  var createSession = function(id) {
+    send({type: "session_id", session_id: id});
+  };
+  var sendSession = function(session) {
+    send({type: "session", session: session});
+  };
+
   for (var i in request.requestedProtocols) {
     var protocol = request.requestedProtocols[i];
     if (protocol == "mos-view") {
@@ -69,7 +76,6 @@ wsServer.on("request", function(request) {
     } else if (protocol == "mos-controller") {
       con = request.accept("mos-controller", request.origin);
       console.log('controller');
-      console.log(request.cookies);
 
       var session_id;
       for (var i in request.cookies) {
@@ -78,20 +84,31 @@ wsServer.on("request", function(request) {
           session_id = cookie.value;
         }
       }
+console.log(sessions);
       if (session_id in sessions) {
+        sendSession(sessions[session_id]);
       } else {
         session_id = createSessionID();
         createSession(session_id);
-        sessions[session_id] = {};
+        sessions[session_id] = {user: ""};
       }
+
+      console.log(sessions[session_id]);
       con.on("message", function(message) {
         if (message.type === "utf8") {
           console.log('Received Message: ' + message.utf8Data);
-          for (var i=0; i < viewConnections.length; i++) {
-            var view = viewConnections[i];
-            if (view) {
-              view.sendUTF(message.utf8Data);
+          var obj = JSON.parse(message.utf8Data);
+          if (obj.type == "touchmove") {
+            obj.name = sessions[session_id].user;
+            obj.id = session_id;
+            for (var i=0; i < viewConnections.length; i++) {
+              var view = viewConnections[i];
+              if (view) {
+                view.sendUTF(JSON.stringify(obj));
+              }
             }
+          } else if (obj.type == "session") {
+            sessions[session_id] = obj.session;
           }
         }
       });
