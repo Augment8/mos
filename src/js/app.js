@@ -20,7 +20,15 @@ connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
 };
 
+var func = {
+  session: function(message) {
+    document.cookie = "SESSION_ID=" + message['session'] + ";";
+  }
+};
+
 // Log messages from the server
 connection.onmessage = function (e) {
   console.log('Server: ' + e.data);
+  var message = JSON.parse(e.data);
+  func[message.type](message);
 };

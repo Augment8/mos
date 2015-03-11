@@ -28,50 +28,76 @@ function originIsAllowed(origin) {
 }
 
 var viewConnections = [];
+var sessions = {};
+
+function createSessionID(){
+  var randam = Math.floor(Math.random()*1000);
+  var date = new Date();
+  var time = date.getTime();
+  return randam + time.toString();
+}
 
 wsServer.on("request", function(request) {
-    if (!originIsAllowed(request.origin)) {
-      // Make sure we only accept requests from an allowed origin
-      request.reject();
-      console.log((new Date()) + " Connection from origin " + request.origin + " rejected.");
-      return;
-    }
-    for (var i in request.requestedProtocols) {
-        var protocol = request.requestedProtocols[i];
-        var con;
-        if (protocol == "mos-view") {
-            console.log('view');
-            con = request.accept("mos-view", request.origin);
-            viewConnections.push(con);
+  if (!originIsAllowed(request.origin)) {
+    // Make sure we only accept requests from an allowed origin
+    request.reject();
+    console.log((new Date()) + " Connection from origin " + request.origin + " rejected.");
+    return;
+  }
+  var con;
+  var createSession = function(id) {
+    con.sendUTF(JSON.stringify({type: "session", session: id}));
+  };
+  for (var i in request.requestedProtocols) {
+    var protocol = request.requestedProtocols[i];
+    if (protocol == "mos-view") {
+      console.log('view');
+      con = request.accept("mos-view", request.origin);
+      viewConnections.push(con);
 
-            con.sendUTF("hello");
+      con.sendUTF("hello");
 
-            con.on("message", function(message) {
-                console.log('veiw: message');
-                if (message.type === "utf8") {
-                  console.log('veiw: ' + message);
-                }
-            });
-            con.on("close", function(reasonCode, description) {
-              console.log('closing');
-            });
-        } else if (protocol == "mos-controller") {
-          con = request.accept("mos-controller", request.origin);
-          console.log('controller');
-          con.on("message", function(message) {
-            if (message.type === "utf8") {
-              console.log('Received Message: ' + message.utf8Data);
-              for (var i=0; i < viewConnections.length; i++) {
-                var view = viewConnections[i];
-                if (view) {
-                  view.sendUTF(message.utf8Data);
-                }
-              }
+      con.on("message", function(message) {
+        console.log('veiw: message');
+        if (message.type === "utf8") {
+          console.log('veiw: ' + message);
+        }
+      });
+      con.on("close", function(reasonCode, description) {
+        console.log('closing');
+      });
+    } else if (protocol == "mos-controller") {
+      con = request.accept("mos-controller", request.origin);
+      console.log('controller');
+      console.log(request.cookies);
+
+      var session_id;
+      for (var i in request.cookies) {
+        var cookie = request.cookies[i];
+        if ("SESSION_ID" === cookie.name) {
+          session_id = cookie.value;
+        }
+      }
+      if (session_id in sessions) {
+      } else {
+        session_id = createSessionID();
+        createSession(session_id);
+        sessions[session_id] = {};
+      }
+      con.on("message", function(message) {
+        if (message.type === "utf8") {
+          console.log('Received Message: ' + message.utf8Data);
+          for (var i=0; i < viewConnections.length; i++) {
+            var view = viewConnections[i];
+            if (view) {
+              view.sendUTF(message.utf8Data);
             }
-          });
-          con.on("close", function(reasonCode, description) {
-            // console.log((new Date()) + ' Peer ' + viewConnection.remoteAddress + ' disconnected.');
-          });
-       }
+          }
+        }
+      });
+      con.on("close", function(reasonCode, description) {
+        // console.log((new Date()) + ' Peer ' + viewConnection.remoteAddress + ' disconnected.');
+      });
     }
+  }
 });
