@@ -18,9 +18,9 @@ connection.onerror = function (error) {
 connection.onmessage = function (e) {
   console.log('event message');
   if (typeof  e.data === 'string') {
-    document.body.insertAdjacentHTML("beforeend",e.data + "<br>");
+    document.body.insertAdjacentHTML("afterbegin",e.data + "<br>");
   } else {
     var str = "x: " + e.data.x + ", y: " + e.data.y;
-    document.body.insertAdjacentHTML("beforeend",str + "<br>");
+    document.body.insertAdjacentHTML("afterbegin",str + "<br>");
   }
 };
