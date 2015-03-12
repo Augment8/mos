@@ -18,6 +18,7 @@
     "gulp-stylus": "^2.0.1"
   },
   "dependencies": {
+    "express": "^4.12.2",
     "websocket": "^1.0.17"
   }
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-var url = 'ws://localhost:8080/';
+var url = location.toString().replace("http","ws").replace("8888","3000");
 var connection = new WebSocket(url,['mos-view']);
 
 connection.onopen = function () {

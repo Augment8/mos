@@ -2,14 +2,14 @@
 
 var WebSocketServer = require("websocket").server;
 var http = require("http");
+var express = require('express');
+var app = express();
 
-var server = http.createServer(function(request, response) {
-  console.log((new Date()) + ' Received request for ' + request.url);
-  response.writeHead(404);
-  response.end();
-});
-server.listen(8080, function() {
-  console.log((new Date()) + ' Server is listening on port 8080');
+// respond with "hello world" when a GET request is made to the homepage
+app.use(express.static('public', {hidden: true}));
+
+var server = app.listen(3000, function () {
+  console.log((new Date()) + ' Server is listening on port 3000');
 });
 
 var wsServer = new WebSocketServer({
