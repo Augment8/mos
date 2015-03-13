@@ -8,7 +8,7 @@ var app = express();
 // respond with "hello world" when a GET request is made to the homepage
 app.use(express.static('public', {hidden: true}));
 
-var server = app.listen(3000, function () {
+var server = app.listen(process.env.PORT || 3000, function () {
   console.log((new Date()) + ' Server is listening on port 3000');
 });
 
