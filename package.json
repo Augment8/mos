@@ -5,20 +5,19 @@
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "gulp build"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
+    "express": "^4.12.2",
     "browser-sync": "^2.2.3",
+    "websocket": "^1.0.17",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.0",
     "gulp-jade": "^1.0.0",
     "gulp-plumber": "^1.0.0",
     "gulp-stylus": "^2.0.1"
-  },
-  "dependencies": {
-    "express": "^4.12.2",
-    "websocket": "^1.0.17"
   }
 }
