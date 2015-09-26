@@ -5,5 +5,13 @@ html(lang="ja")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     title mos
     meta(name="viewport" content="width=device-width, initial-scale=1")
+    style(type="text/css")
+      | html, body { height: 100%; margin: 0; padding: 0; }
+      | #map { height: 100%; }
+      | #name { margin: 0 12px; }
     script(src="/js/view.js" charset="UTF-8" async)
+    script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2n32PAVjF1CvhxjbrfqHnZ4rHfbFno3A&callback=initMap")
   body
+    操作してる人
+    span#name
+    #map
