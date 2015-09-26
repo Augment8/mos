@@ -1,5 +1,15 @@
 'use strict';
 
+var map;
+function initMap() {
+  // Create a map object and specify the DOM element for display.
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    scrollwheel: false,
+    zoom: 8
+  });
+}
+
 var url = location.toString().replace("http","ws").replace("8888","3000");
 var connection = new WebSocket(url,['mos-view']);
 
@@ -43,13 +53,3 @@ connection.onmessage = function (e) {
 //    document.body.insertAdjacentHTML("afterbegin",str + "<br>");
   }
 };
-
-var map;
-function initMap() {
-  // Create a map object and specify the DOM element for display.
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    scrollwheel: false,
-    zoom: 8
-  });
-}
