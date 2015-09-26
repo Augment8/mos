@@ -62,8 +62,6 @@ wsServer.on("request", function(request) {
       con = request.accept("mos-view", request.origin);
       viewConnections.push(con);
 
-      con.sendUTF("hello");
-
       con.on("message", function(message) {
         console.log('veiw: message');
         if (message.type === "utf8") {

@@ -5,10 +5,28 @@ var connection = new WebSocket(url,['mos-controller']);
 
 connection.onopen = function () {
   console.log('open');
+  document.addEventListener('touchstart', function(e){
+    var touch = e.changedTouches[0];
+    var obj = {
+      type: 'touchstart',
+      x: touch.clientX,
+      y: touch.clientY
+    };
+    connection.send(JSON.stringify(obj));
+  });
   document.addEventListener('touchmove', function(e){
     var touch = e.changedTouches[0];
     var obj = {
       type: 'touchmove',
+      x: touch.clientX,
+      y: touch.clientY
+    };
+    connection.send(JSON.stringify(obj));
+  });
+  document.addEventListener('touchend', function(e){
+    var touch = e.changedTouches[0];
+    var obj = {
+      type: 'touchend',
       x: touch.clientX,
       y: touch.clientY
     };

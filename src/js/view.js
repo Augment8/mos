@@ -21,10 +21,22 @@ connection.onmessage = function (e) {
   console.log(e.data);
   if (typeof  e.data === 'string') {
     var n = JSON.parse(e.data);
-    map.panBy(last.x - n.x, last.y - n.y);
-    last.x = n.x;
-    last.y = n.y;
-    document.getElementById("name").innerHTML = n.name;
+    if (n.type == 'touchstart') {
+      last.x = n.x;
+      last.y = n.y;
+    }
+    if (n.type == 'touchmove') {
+      map.panBy(last.x - n.x, last.y - n.y);
+      last.x = n.x;
+      last.y = n.y;
+      document.getElementById("name").innerHTML = n.name;
+    }
+    if (n.type == 'touchend') {
+      map.panBy(last.x - n.x, last.y - n.y);
+      last.x = n.x;
+      last.y = n.y;
+      document.getElementById("name").innerHTML = "";
+    }
 //    document.body.insertAdjacentHTML("afterbegin",e.data + "<br>");
   } else {
     var str = "x: " + e.data.x + ", y: " + e.data.y;
