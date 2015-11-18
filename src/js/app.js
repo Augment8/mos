@@ -34,6 +34,7 @@ connection.onopen = function () {
   });
   window.addEventListener("deviceorientation", function(e){
     var obj = {
+      type: 'deviceorientation',
       absolute: e.absolute,
       alpha: e.alpha,
       beta: e.alpha,
