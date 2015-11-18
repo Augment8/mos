@@ -32,7 +32,7 @@ connection.onopen = function () {
     };
     connection.send(JSON.stringify(obj));
   });
-  window.addEventListener("deviceorientation", function(e){
+  window.addEventListener("deviceorientation", mutator(200)(function(e){
     var obj = {
       type: 'deviceorientation',
       absolute: e.absolute,
@@ -41,12 +41,26 @@ connection.onopen = function () {
       gamma: e.gamma
     };
     connection.send(JSON.stringify(obj));
-  }, true);
+  }), true);
 };
 
 // Log errors
 connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
+};
+
+var mutator = function (n) {
+  var time = Date.now();
+  return function(f) {
+    return function(e) {
+      var tmp = Date.now();
+      if (time + n < tmp) {
+        time = tmp;
+        return f(e);
+      }
+      return null;
+    };
+  };
 };
 
 var session = {};
