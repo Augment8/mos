@@ -32,6 +32,15 @@ connection.onopen = function () {
     };
     connection.send(JSON.stringify(obj));
   });
+  window.addEventListener("deviceorientation", function(e){
+    var obj = {
+      absolute: e.absolute,
+      alpha: e.alpha,
+      beta: e.alpha,
+      gamma: e.gamma
+    };
+    connection.send(JSON.stringify(obj));
+  }, true);
 };
 
 // Log errors
