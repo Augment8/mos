@@ -96,7 +96,7 @@ wsServer.on("request", function(request) {
         if (message.type === "utf8") {
           console.log('Received Message: ' + message.utf8Data);
           var obj = JSON.parse(message.utf8Data);
-          if (obj.type == "touchmove" || obj.type == "touchstart" || obj.type == "touchend" || obj.type == "deviceorientation") {
+          if (obj.type == "touchmove" || obj.type == "touchstart" || obj.type == "touchend" || obj.type == "deviceorientation" || obj.type == "gravity") {
             obj.name = sessions[session_id].user;
             obj.id = session_id;
             for (var i=0; i < viewConnections.length; i++) {

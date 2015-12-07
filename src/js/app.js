@@ -32,13 +32,12 @@ connection.onopen = function () {
     };
     connection.send(JSON.stringify(obj));
   });
-  window.addEventListener("deviceorientation", mutator(200)(function(e){
+  window.addEventListener("devicemotion", mutator(200)(function(e){
     var obj = {
-      type: 'deviceorientation',
-      absolute: e.absolute,
-      alpha: e.alpha,
-      beta: e.alpha,
-      gamma: e.gamma
+      type: 'gravity',
+      x: e.accelerationIncludingGravity.x,
+      y: e.accelerationIncludingGravity.y,
+      z: e.accelerationIncludingGravity.z
     };
     connection.send(JSON.stringify(obj));
   }), true);
